@@ -3,6 +3,10 @@ using BizPilotBackEndProduction.Core.otherObjects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace BizPilotBackEndProduction.Controllers
 {
@@ -86,6 +90,72 @@ namespace BizPilotBackEndProduction.Controllers
             await _userManager.AddToRoleAsync(newUser, StaticUserRoles.USER);
             return Ok("User created succesfully");
         }
+
+
+        [HttpPost]
+        [Route("Login")]
+
+        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+        { 
+        var user = await _userManager.FindByNameAsync(loginDto.UserName);
+
+        if(user is null)
+            
+                return Unauthorized("Invalid Credentials");
+
+            var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, loginDto.Password);
+
+            if (!isPasswordCorrect)
+                return Unauthorized("Invalid Creadentials");
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            var authClaims = new List<Claim>
+            {
+            new Claim (ClaimTypes.Name , user.UserName),
+            new Claim (ClaimTypes.NameIdentifier, user.Id),
+            new Claim ("JWTID",Guid.NewGuid().ToString()),
+            };
+
+            foreach (var userRole in userRoles)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+
+            }
+
+            var token = GenerateNewJsonWebToken(authClaims);
+            return Ok(token);
+
+        }
+
+        private string GenerateNewJsonWebToken(List<Claim> claims)
+        {
+
+            var authSecreat = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+            var tokenObject = new JwtSecurityToken(
+
+                issuer: _configuration["JWT:ValidIssuer"],
+                audience:_configuration["JWT:ValidAudience"],
+                expires:DateTime.Now.AddHours(1),
+                claims:claims,
+                signingCredentials:new SigningCredentials(authSecreat, SecurityAlgorithms.HmacSha256)
+                ) ;
+
+
+            string token = new JwtSecurityTokenHandler().WriteToken(tokenObject);
+            return token;
+
+
+        }
+
+
+        //ValidateIssuer = true,
+        //    ValidateAudience = true,
+        //    ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+        //    ValidAudience = builder.Configuration["JWT:ValidAudience"],
+        //    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+
+
 
     }
 }
