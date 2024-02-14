@@ -4,9 +4,11 @@ using BizPilotBackEndProduction.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BizPilotBackEnd.Core.dbContext;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BizPilotBackEndProduction.Controllers
 {
+   
     [Route("api/[controller]")]
     [ApiController]
     public class CustomerController : ControllerBase
@@ -26,6 +28,7 @@ namespace BizPilotBackEndProduction.Controllers
         }
 
         // GET: api/Customer/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Customers>> GetCustomer(int id)
         {
