@@ -13,5 +13,11 @@ namespace BizPilotBackEnd.Core.dbContext
         }
 
         public DbSet<Customers> Customers { get; set; }
+
+        public DbSet<Invoiceh> InvoicesHeaders { get; set; }
+        public DbSet<Invoiced> InvoiceDetails { get; set; }
+
+       
+
     }
 }
