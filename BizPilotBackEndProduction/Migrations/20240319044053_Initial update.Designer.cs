@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BizPilotBackEndProduction.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240108103650_customer_database_initiated")]
-    partial class customer_database_initiated
+    [Migration("20240319044053_Initial update")]
+    partial class Initialupdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -86,6 +86,90 @@ namespace BizPilotBackEndProduction.Migrations
                     b.HasKey("CustId");
 
                     b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("BizPilotBackEndProduction.Models.Invoices.InvoiceDetails", b =>
+                {
+                    b.Property<int>("InvId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InvId"));
+
+                    b.Property<float>("InvPrice")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("NoOfUnits")
+                        .HasColumnType("real");
+
+                    b.Property<DateTime>("SysDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("InvId");
+
+                    b.ToTable("InvoiceDetails");
+                });
+
+            modelBuilder.Entity("BizPilotBackEndProduction.Models.Invoices.InvoiceHeader", b =>
+                {
+                    b.Property<int>("InvId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InvId"));
+
+                    b.Property<int>("CancellUser")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CustId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("DisAmount")
+                        .HasColumnType("real");
+
+                    b.Property<int>("Discount")
+                        .HasColumnType("int");
+
+                    b.Property<float>("GrossInvAmount")
+                        .HasColumnType("real");
+
+                    b.Property<string>("InvCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("InvDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<float>("TotalAmount")
+                        .HasColumnType("real");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isCancell")
+                        .HasColumnType("bit");
+
+                    b.HasKey("InvId");
+
+                    b.ToTable("InvoiceHeaders");
+                });
+
+            modelBuilder.Entity("InvoiceDetailsInvoiceHeader", b =>
+                {
+                    b.Property<int>("InvId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InvoiceHeadersInvId")
+                        .HasColumnType("int");
+
+                    b.HasKey("InvId", "InvoiceHeadersInvId");
+
+                    b.HasIndex("InvoiceHeadersInvId");
+
+                    b.ToTable("InvoiceDetailsInvoiceHeader");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -284,6 +368,21 @@ namespace BizPilotBackEndProduction.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("InvoiceDetailsInvoiceHeader", b =>
+                {
+                    b.HasOne("BizPilotBackEndProduction.Models.Invoices.InvoiceDetails", null)
+                        .WithMany()
+                        .HasForeignKey("InvId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BizPilotBackEndProduction.Models.Invoices.InvoiceHeader", null)
+                        .WithMany()
+                        .HasForeignKey("InvoiceHeadersInvId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

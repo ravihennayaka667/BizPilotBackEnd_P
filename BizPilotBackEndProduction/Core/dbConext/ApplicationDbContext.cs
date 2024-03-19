@@ -1,4 +1,5 @@
 ﻿using BizPilotBackEndProduction.Models;
+using BizPilotBackEndProduction.Models.Invoices;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,9 +14,8 @@ namespace BizPilotBackEnd.Core.dbContext
         }
 
         public DbSet<Customers> Customers { get; set; }
-
-        public DbSet<Invoiceh> InvoicesHeaders { get; set; }
-        public DbSet<Invoiced> InvoiceDetails { get; set; }
+        public DbSet<InvoiceHeader> InvoiceHeaders { get; set; }
+        public DbSet<InvoiceDetails> InvoiceDetails { get; set; }
 
        
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BizPilotBackEndProduction.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Initialupdate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,6 +48,70 @@ namespace BizPilotBackEndProduction.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Customers",
+                columns: table => new
+                {
+                    CustId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Fname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Lname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AddressLine1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AddressLine2 = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PostalCode = table.Column<int>(type: "int", nullable: false),
+                    LandNo = table.Column<int>(type: "int", nullable: false),
+                    MobileNo = table.Column<int>(type: "int", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Fax = table.Column<int>(type: "int", nullable: false),
+                    ContactPesonName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContactPersonMobile = table.Column<int>(type: "int", nullable: false),
+                    ContactPersonLand = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Customers", x => x.CustId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "InvoiceDetails",
+                columns: table => new
+                {
+                    InvId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ItemId = table.Column<int>(type: "int", nullable: false),
+                    NoOfUnits = table.Column<float>(type: "real", nullable: false),
+                    InvPrice = table.Column<float>(type: "real", nullable: false),
+                    SysDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InvoiceDetails", x => x.InvId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "InvoiceHeaders",
+                columns: table => new
+                {
+                    InvId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    InvCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    InvDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CustId = table.Column<int>(type: "int", nullable: false),
+                    Discount = table.Column<int>(type: "int", nullable: false),
+                    DisAmount = table.Column<float>(type: "real", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    TotalAmount = table.Column<float>(type: "real", nullable: false),
+                    GrossInvAmount = table.Column<float>(type: "real", nullable: false),
+                    isCancell = table.Column<bool>(type: "bit", nullable: false),
+                    CancellUser = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InvoiceHeaders", x => x.InvId);
                 });
 
             migrationBuilder.CreateTable(
@@ -156,6 +220,30 @@ namespace BizPilotBackEndProduction.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "InvoiceDetailsInvoiceHeader",
+                columns: table => new
+                {
+                    InvId = table.Column<int>(type: "int", nullable: false),
+                    InvoiceHeadersInvId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InvoiceDetailsInvoiceHeader", x => new { x.InvId, x.InvoiceHeadersInvId });
+                    table.ForeignKey(
+                        name: "FK_InvoiceDetailsInvoiceHeader_InvoiceDetails_InvId",
+                        column: x => x.InvId,
+                        principalTable: "InvoiceDetails",
+                        principalColumn: "InvId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_InvoiceDetailsInvoiceHeader_InvoiceHeaders_InvoiceHeadersInvId",
+                        column: x => x.InvoiceHeadersInvId,
+                        principalTable: "InvoiceHeaders",
+                        principalColumn: "InvId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -194,6 +282,11 @@ namespace BizPilotBackEndProduction.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InvoiceDetailsInvoiceHeader_InvoiceHeadersInvId",
+                table: "InvoiceDetailsInvoiceHeader",
+                column: "InvoiceHeadersInvId");
         }
 
         /// <inheritdoc />
@@ -215,10 +308,22 @@ namespace BizPilotBackEndProduction.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Customers");
+
+            migrationBuilder.DropTable(
+                name: "InvoiceDetailsInvoiceHeader");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "InvoiceDetails");
+
+            migrationBuilder.DropTable(
+                name: "InvoiceHeaders");
         }
     }
 }
