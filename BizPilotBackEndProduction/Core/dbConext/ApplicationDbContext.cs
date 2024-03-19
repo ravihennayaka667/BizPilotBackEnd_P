@@ -16,6 +16,7 @@ namespace BizPilotBackEnd.Core.dbContext
         public DbSet<Customers> Customers { get; set; }
         public DbSet<InvoiceHeader> InvoiceHeaders { get; set; }
         public DbSet<InvoiceDetails> InvoiceDetails { get; set; }
+        //test
 
        
 
