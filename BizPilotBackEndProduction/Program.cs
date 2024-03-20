@@ -1,4 +1,6 @@
 using BizPilotBackEnd.Core.dbContext;
+using BizPilotBackEndProduction.Repository;
+using BizPilotBackEndProduction.Repository.IRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +19,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     var connectionString = builder.Configuration.GetConnectionString("Local");
     options.UseSqlServer(connectionString);
 });
+
+
+
+builder.Services.AddScoped<IinvoiceRepository, InvoiceRepository>();
+
 
 // Add identity
 builder.Services

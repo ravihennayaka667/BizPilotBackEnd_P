@@ -6,8 +6,8 @@ namespace BizPilotBackEndProduction.Models.Invoices
     public class InvoiceDetails
     {
 
-
         [Key]
+        public int Id { get; set; }
         public int InvId { get; set; }
         public int ItemId { get; set; }
         public float NoOfUnits { get; set; }
