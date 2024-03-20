@@ -87,11 +87,14 @@ namespace BizPilotBackEndProduction.Migrations
 
             modelBuilder.Entity("BizPilotBackEndProduction.Models.Invoices.InvoiceDetails", b =>
                 {
-                    b.Property<int>("InvId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InvId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("InvId")
+                        .HasColumnType("int");
 
                     b.Property<float>("InvPrice")
                         .HasColumnType("real");
@@ -105,7 +108,7 @@ namespace BizPilotBackEndProduction.Migrations
                     b.Property<DateTime>("SysDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("InvId");
+                    b.HasKey("Id");
 
                     b.ToTable("InvoiceDetails");
                 });

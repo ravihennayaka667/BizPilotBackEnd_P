@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BizPilotBackEndProduction.Migrations
 {
     /// <inheritdoc />
-    public partial class Initialupdate : Migration
+    public partial class updatedmodelinvoicemodelvalue : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -80,8 +80,9 @@ namespace BizPilotBackEndProduction.Migrations
                 name: "InvoiceDetails",
                 columns: table => new
                 {
-                    InvId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    InvId = table.Column<int>(type: "int", nullable: false),
                     ItemId = table.Column<int>(type: "int", nullable: false),
                     NoOfUnits = table.Column<float>(type: "real", nullable: false),
                     InvPrice = table.Column<float>(type: "real", nullable: false),
@@ -89,7 +90,7 @@ namespace BizPilotBackEndProduction.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_InvoiceDetails", x => x.InvId);
+                    table.PrimaryKey("PK_InvoiceDetails", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -234,7 +235,7 @@ namespace BizPilotBackEndProduction.Migrations
                         name: "FK_InvoiceDetailsInvoiceHeader_InvoiceDetails_InvId",
                         column: x => x.InvId,
                         principalTable: "InvoiceDetails",
-                        principalColumn: "InvId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_InvoiceDetailsInvoiceHeader_InvoiceHeaders_InvoiceHeadersInvId",
