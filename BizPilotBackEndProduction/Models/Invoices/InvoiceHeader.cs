@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BizPilotBackEndProduction.Models.Invoices
 {
@@ -7,6 +8,7 @@ namespace BizPilotBackEndProduction.Models.Invoices
 
 
         [Key]
+      
         public int InvId { get; set; }
         public string InvCode { get; set; }
         public DateTime InvDate { get; set; }

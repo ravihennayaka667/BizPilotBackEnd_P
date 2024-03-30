@@ -99,6 +99,9 @@ namespace BizPilotBackEndProduction.Migrations
                     b.Property<float>("InvPrice")
                         .HasColumnType("real");
 
+                    b.Property<int?>("InvoiceHeaderInvId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ItemId")
                         .HasColumnType("int");
 
@@ -109,6 +112,8 @@ namespace BizPilotBackEndProduction.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("InvoiceHeaderInvId");
 
                     b.ToTable("InvoiceDetails");
                 });
@@ -155,21 +160,6 @@ namespace BizPilotBackEndProduction.Migrations
                     b.HasKey("InvId");
 
                     b.ToTable("InvoiceHeaders");
-                });
-
-            modelBuilder.Entity("InvoiceDetailsInvoiceHeader", b =>
-                {
-                    b.Property<int>("InvId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("InvoiceHeadersInvId")
-                        .HasColumnType("int");
-
-                    b.HasKey("InvId", "InvoiceHeadersInvId");
-
-                    b.HasIndex("InvoiceHeadersInvId");
-
-                    b.ToTable("InvoiceDetailsInvoiceHeader");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -370,19 +360,11 @@ namespace BizPilotBackEndProduction.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("InvoiceDetailsInvoiceHeader", b =>
+            modelBuilder.Entity("BizPilotBackEndProduction.Models.Invoices.InvoiceDetails", b =>
                 {
-                    b.HasOne("BizPilotBackEndProduction.Models.Invoices.InvoiceDetails", null)
-                        .WithMany()
-                        .HasForeignKey("InvId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("BizPilotBackEndProduction.Models.Invoices.InvoiceHeader", null)
-                        .WithMany()
-                        .HasForeignKey("InvoiceHeadersInvId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("InvoiceDetails")
+                        .HasForeignKey("InvoiceHeaderInvId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -434,6 +416,11 @@ namespace BizPilotBackEndProduction.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BizPilotBackEndProduction.Models.Invoices.InvoiceHeader", b =>
+                {
+                    b.Navigation("InvoiceDetails");
                 });
 #pragma warning restore 612, 618
         }

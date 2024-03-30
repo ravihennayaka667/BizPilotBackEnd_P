@@ -17,7 +17,7 @@ namespace BizPilotBackEnd.Core.dbContext
         public DbSet<InvoiceHeader> InvoiceHeaders { get; set; }
         public DbSet<InvoiceDetails> InvoiceDetails { get; set; }
 
-       
+
 
 
 
