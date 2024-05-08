@@ -21,9 +21,11 @@ namespace BizPilotBackEndProduction.Controllers
 
         public AuthController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
         {
+        
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
+       
         }
 
 
@@ -43,8 +45,6 @@ namespace BizPilotBackEndProduction.Controllers
             if (isAdminRoleExists && isUserRoleExists && isOwnerRoleExists)
                 return Ok("Roles seeding is already done");
             
-
-
 
             await _roleManager.CreateAsync(new IdentityRole(StaticUserRoles.USER));
             await _roleManager.CreateAsync(new IdentityRole(StaticUserRoles.OWNER));

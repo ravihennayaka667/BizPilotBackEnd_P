@@ -1,8 +1,6 @@
-﻿using BizPilotBackEnd.Core.dbContext;
-using BizPilotBackEndProduction.Models.Invoices;
+﻿using BizPilotBackEndProduction.Models.Invoices;
 using BizPilotBackEndProduction.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,77 +11,101 @@ namespace BizPilotBackEndProduction.Controllers
     [ApiController]
     public class InvoiceController : ControllerBase
     {
-        private readonly IInvoiceRepository _invoiceRepository;
-        private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
+        private readonly IinvoiceRepository _invoiceRepository;
 
-        public InvoiceController(IInvoiceRepository invoiceRepository, IDbContextFactory<ApplicationDbContext> contextFactory)
+        public InvoiceController(IinvoiceRepository invoiceRepository)
         {
             _invoiceRepository = invoiceRepository;
-            _contextFactory = contextFactory;
         }
 
-        // GET: api/invoice
+        // GET: api/Invoice
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<InvoiceHeader>>> GetAllInvoices()
+        public async Task<ActionResult<IEnumerable<InvoiceHeader>>> GetInvoices()
         {
-            using var context = _contextFactory.CreateDbContext();
-            var invoices = await _invoiceRepository.GetAllAsync(context);
+            var invoices = await _invoiceRepository.GetAllAsync();
             return Ok(invoices);
         }
 
-        // GET: api/invoice/5
+        // GET: api/Invoice/5
         [HttpGet("{id}")]
         public async Task<ActionResult<InvoiceHeader>> GetInvoice(int id)
         {
-            using var context = _contextFactory.CreateDbContext();
-            var invoice = await _invoiceRepository.GetByIdAsync(id, context);
-
+            var invoice = await _invoiceRepository.GetByIdAsync(id);
             if (invoice == null)
             {
                 return NotFound();
             }
-
             return Ok(invoice);
         }
 
-        // POST: api/invoice
+
+
+        // POST: api/Invoice
         [HttpPost]
-        public async Task<ActionResult<InvoiceHeader>> CreateInvoice(InvoiceHeader invoiceHeader)
+        public async Task<ActionResult<InvoiceHeader>> PostInvoice(InvoiceHeader invoiceHeader)
         {
-            using var context = _contextFactory.CreateDbContext();
-            await _invoiceRepository.AddAsync(invoiceHeader, context);
+            await _invoiceRepository.AddAsync(invoiceHeader);
             return CreatedAtAction(nameof(GetInvoice), new { id = invoiceHeader.InvId }, invoiceHeader);
         }
 
-        // PUT: api/invoice/5
+
+
+
+        // PUT: api/Invoice/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateInvoice(int id, InvoiceHeader invoiceHeader)
+        public async Task<IActionResult> PutInvoice(int id, InvoiceHeader invoiceHeader)
         {
             if (id != invoiceHeader.InvId)
             {
                 return BadRequest();
             }
-
-            using var context = _contextFactory.CreateDbContext();
-            await _invoiceRepository.UpdateAsync(invoiceHeader, context);
-
+            try
+            {
+                await _invoiceRepository.UpdateAsync(invoiceHeader);
+            }
+            catch (Exception)
+            {
+                if (!InvoiceExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
             return NoContent();
         }
-
-        // DELETE: api/invoice/5
+        // DELETE: api/Invoice/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteInvoice(int id)
         {
-            using var context = _contextFactory.CreateDbContext();
-            var invoice = await _invoiceRepository.GetByIdAsync(id, context);
+            var invoice = await _invoiceRepository.GetByIdAsync(id);
             if (invoice == null)
             {
                 return NotFound();
             }
 
-            await _invoiceRepository.DeleteAsync(invoice, context);
+            try
+            {
+                await _invoiceRepository.DeleteAsync(invoice);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it as per your application's requirements
+                return StatusCode(500, "An error occurred while deleting the invoice.");
+            }
+        }
 
-            return NoContent();
+
+        private bool InvoiceExists(int id)
+        {
+            // Implement this method based on your application logic
+            throw new NotImplementedException();
         }
     }
 }
+
+
+

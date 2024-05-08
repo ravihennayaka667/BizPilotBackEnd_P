@@ -12,7 +12,6 @@ namespace BizPilotBackEndProduction.Models.Invoices
         public int InvId { get; set; }
         public string InvCode { get; set; }
         public DateTime InvDate { get; set; }
-
         public int CustId { get; set; }
         public int Discount { get; set; }
         public float DisAmount { get; set; }
@@ -21,8 +20,6 @@ namespace BizPilotBackEndProduction.Models.Invoices
         public float GrossInvAmount { get; set; }
         public bool isCancell { get; set; }
         public int CancellUser { get; set; }
-
-
         public virtual ICollection<InvoiceDetails> InvoiceDetails { get; set; }
     }
 }

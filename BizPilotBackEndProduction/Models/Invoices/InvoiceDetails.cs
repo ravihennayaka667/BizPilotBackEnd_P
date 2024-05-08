@@ -10,7 +10,6 @@ namespace BizPilotBackEndProduction.Models.Invoices
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public int InvId { get; set; }
         public int ItemId { get; set; }
         public float NoOfUnits { get; set; }
         public float InvPrice { get; set; }

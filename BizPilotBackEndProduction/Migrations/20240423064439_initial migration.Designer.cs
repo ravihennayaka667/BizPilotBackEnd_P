@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BizPilotBackEndProduction.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240330092817_updated invoice model")]
-    partial class updatedinvoicemodel
+    [Migration("20240423064439_initial migration")]
+    partial class initialmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -95,9 +95,6 @@ namespace BizPilotBackEndProduction.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("InvId")
-                        .HasColumnType("int");
 
                     b.Property<float>("InvPrice")
                         .HasColumnType("real");

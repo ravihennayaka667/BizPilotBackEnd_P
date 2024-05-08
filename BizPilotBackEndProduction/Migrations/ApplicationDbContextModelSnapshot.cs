@@ -93,9 +93,6 @@ namespace BizPilotBackEndProduction.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("InvId")
-                        .HasColumnType("int");
-
                     b.Property<float>("InvPrice")
                         .HasColumnType("real");
 
